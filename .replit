@@ -14,10 +14,11 @@ run = ["npm", "run", "start"]
 localPort = 5000
 externalPort = 80
 
-[[ports]]
-localPort = 44291
-externalPort = 3001
+<<<<<<< HEAD
 
+
+
+>>>>>>> 9258f2f (Extracted stack files)
 [env]
 PORT = "5000"
 
