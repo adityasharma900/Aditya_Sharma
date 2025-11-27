@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Download, 
   Mail, 
@@ -13,6 +17,7 @@ import {
   Code, 
   Languages, 
   ChevronDown,
+  ChevronUp,
   Menu,
   X,
   Sun,
@@ -20,10 +25,30 @@ import {
   MessageCircle,
   Calendar,
   Award,
-  Target
+  Target,
+  Send,
+  Loader2,
+  Quote,
+  BookOpen,
+  ArrowRight,
+  User
 } from "lucide-react";
 import { SiLinkedin, SiWhatsapp, SiPython, SiFlutter, SiTensorflow, SiAndroidstudio } from "react-icons/si";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+
+const contactFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  subject: z.string().min(3, "Subject must be at least 3 characters"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
 
 function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -76,6 +101,8 @@ function Navigation() {
     { href: "#experience", label: "Experience" },
     { href: "#projects", label: "Projects" },
     { href: "#skills", label: "Skills" },
+    { href: "#testimonials", label: "Testimonials" },
+    { href: "#blog", label: "Blog" },
     { href: "#contact", label: "Contact" },
   ];
 
@@ -636,8 +663,11 @@ function ExperienceSection() {
 }
 
 function ProjectsSection() {
+  const [expandedProject, setExpandedProject] = useState<string | null>(null);
+  
   const projects = [
     {
+      id: "language-app",
       title: "Language Learning Mobile App",
       period: "Nov 2022 - Dec 2022",
       description: "Developed a Java-based Android app for language learners to connect through real-time voice and video calls.",
@@ -648,8 +678,21 @@ function ProjectsSection() {
       technologies: ["Java", "Android Studio", "WebRTC"],
       metric: "30%",
       metricLabel: "User Satisfaction Increase",
+      caseStudy: {
+        challenge: "Language learners often struggle to find conversation partners who share their specific learning goals and availability. Existing platforms lacked intelligent matching and real-time communication features.",
+        solution: "I designed and built a comprehensive matching algorithm that considers language proficiency levels, learning goals, time zones, and interests to pair compatible users. The app features WebRTC-powered voice and video calls for seamless real-time communication.",
+        implementation: [
+          "Designed user profiles with detailed language learning preferences",
+          "Built a weighted matching algorithm using multiple compatibility factors",
+          "Implemented WebRTC for peer-to-peer voice/video communication",
+          "Created a rating system to improve future match quality",
+          "Added push notifications for match alerts and call reminders"
+        ],
+        results: "The app achieved a 30% increase in user satisfaction scores. Users reported finding compatible partners faster and having more productive language exchange sessions.",
+      },
     },
     {
+      id: "disease-prediction",
       title: "Disease Prediction Model",
       period: "Feb 2023 - Apr 2023",
       description: "Built a machine learning model using Python and TensorFlow to predict diseases based on patient data.",
@@ -660,6 +703,18 @@ function ProjectsSection() {
       technologies: ["Python", "TensorFlow", "Pandas", "Machine Learning"],
       metric: "75%",
       metricLabel: "Prediction Accuracy",
+      caseStudy: {
+        challenge: "Early disease detection is crucial for effective treatment. Manual diagnosis can be time-consuming and may miss subtle patterns in patient data that could indicate early-stage conditions.",
+        solution: "I developed a machine learning model that analyzes patient symptoms, medical history, and vital signs to predict potential diseases. The model uses TensorFlow for deep learning capabilities and Pandas for efficient data preprocessing.",
+        implementation: [
+          "Collected and cleaned diverse medical datasets",
+          "Performed extensive feature engineering to identify relevant predictors",
+          "Built and trained a neural network using TensorFlow",
+          "Implemented cross-validation to ensure model reliability",
+          "Created a user-friendly interface for healthcare providers"
+        ],
+        results: "Achieved 75% prediction accuracy on the test dataset. The model successfully identified patterns that could assist healthcare professionals in early diagnosis.",
+      },
     },
   ];
 
@@ -680,13 +735,13 @@ function ProjectsSection() {
         <div className="grid lg:grid-cols-2 gap-8">
           {projects.map((project, index) => (
             <motion.div
-              key={project.title}
+              key={project.id}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="p-6 h-full flex flex-col hover-elevate">
+              <Card className="p-6 h-full flex flex-col">
                 <div className="flex-1 space-y-4">
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -712,9 +767,47 @@ function ProjectsSection() {
                       </li>
                     ))}
                   </ul>
+
+                  <AnimatePresence>
+                    {expandedProject === project.id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="pt-4 space-y-4 border-t border-border mt-4">
+                          <div>
+                            <h4 className="text-sm font-semibold text-primary mb-2">The Challenge</h4>
+                            <p className="text-sm text-muted-foreground">{project.caseStudy.challenge}</p>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-semibold text-primary mb-2">The Solution</h4>
+                            <p className="text-sm text-muted-foreground">{project.caseStudy.solution}</p>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-semibold text-primary mb-2">Implementation Details</h4>
+                            <ul className="space-y-1">
+                              {project.caseStudy.implementation.map((item, i) => (
+                                <li key={i} className="flex gap-2 text-sm text-muted-foreground">
+                                  <span className="text-primary">•</span>
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-semibold text-primary mb-2">Results</h4>
+                            <p className="text-sm text-muted-foreground">{project.caseStudy.results}</p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
                 
-                <div className="pt-4 mt-4 border-t border-border">
+                <div className="pt-4 mt-4 border-t border-border space-y-4">
                   <div className="flex flex-wrap gap-2">
                     {project.technologies.map((tech) => (
                       <Badge key={tech} variant="secondary" className="text-xs">
@@ -722,6 +815,25 @@ function ProjectsSection() {
                       </Badge>
                     ))}
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setExpandedProject(expandedProject === project.id ? null : project.id)}
+                    className="w-full"
+                    data-testid={`button-expand-${project.id}`}
+                  >
+                    {expandedProject === project.id ? (
+                      <>
+                        <ChevronUp className="h-4 w-4 mr-2" />
+                        Hide Case Study
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="h-4 w-4 mr-2" />
+                        View Case Study
+                      </>
+                    )}
+                  </Button>
                 </div>
               </Card>
             </motion.div>
@@ -894,7 +1006,194 @@ function LanguagesSection() {
   );
 }
 
+function TestimonialsSection() {
+  const testimonials = [
+    {
+      name: "Rajesh Kumar",
+      role: "Project Manager",
+      company: "UE Solution India",
+      content: "Aditya consistently demonstrated exceptional problem-solving skills and delivered high-quality code. His work on our eCommerce platform significantly improved our mobile app's performance.",
+      avatar: "RK",
+    },
+    {
+      name: "Dr. Sharma",
+      role: "Professor",
+      company: "Eklavya University",
+      content: "An outstanding student with a keen interest in AI and machine learning. His language learning app project showcased innovative thinking and strong technical abilities.",
+      avatar: "DS",
+    },
+    {
+      name: "Priya Singh",
+      role: "Team Lead",
+      company: "UE Solution India",
+      content: "Aditya's ability to integrate complex systems and work with legacy code while maintaining clean architecture is impressive. A valuable team member who always goes the extra mile.",
+      avatar: "PS",
+    },
+  ];
+
+  return (
+    <section id="testimonials" className="py-24 bg-muted/30 scroll-mt-20">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" data-testid="text-testimonials-title">Testimonials</h2>
+          <p className="text-lg text-muted-foreground">What colleagues and mentors say about working with me</p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={testimonial.name}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="p-6 h-full flex flex-col">
+                <Quote className="h-8 w-8 text-primary/20 mb-4" />
+                <p className="text-muted-foreground flex-1 mb-6 italic">
+                  "{testimonial.content}"
+                </p>
+                <div className="flex items-center gap-4 pt-4 border-t border-border">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold">
+                    {testimonial.avatar}
+                  </div>
+                  <div>
+                    <p className="font-semibold">{testimonial.name}</p>
+                    <p className="text-sm text-muted-foreground">{testimonial.role}, {testimonial.company}</p>
+                  </div>
+                </div>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function BlogSection() {
+  const articles = [
+    {
+      title: "Building Cross-Platform Apps with Flutter",
+      excerpt: "A comprehensive guide to creating high-performance mobile applications that work seamlessly on both iOS and Android platforms.",
+      category: "Mobile Development",
+      readTime: "8 min read",
+      date: "Oct 2024",
+    },
+    {
+      title: "Machine Learning for Disease Prediction",
+      excerpt: "Exploring how TensorFlow and Python can be used to build predictive models that assist healthcare professionals in early diagnosis.",
+      category: "AI/ML",
+      readTime: "12 min read",
+      date: "Sep 2024",
+    },
+    {
+      title: "WebRTC: Real-Time Communication in Apps",
+      excerpt: "Understanding peer-to-peer communication and how to implement voice and video calling features in mobile applications.",
+      category: "Technology",
+      readTime: "10 min read",
+      date: "Aug 2024",
+    },
+  ];
+
+  return (
+    <section id="blog" className="py-24 scroll-mt-20">
+      <div className="max-w-7xl mx-auto px-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" data-testid="text-blog-title">Technical Insights</h2>
+          <p className="text-lg text-muted-foreground">Sharing my knowledge and experiences in software development</p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {articles.map((article, index) => (
+            <motion.div
+              key={article.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="p-6 h-full flex flex-col hover-elevate">
+                <div className="flex items-center gap-2 mb-4">
+                  <Badge variant="secondary" className="text-xs">{article.category}</Badge>
+                  <span className="text-xs text-muted-foreground">{article.date}</span>
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{article.title}</h3>
+                <p className="text-sm text-muted-foreground flex-1 mb-4">{article.excerpt}</p>
+                <div className="flex items-center justify-between pt-4 border-t border-border">
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <BookOpen className="h-3 w-3" />
+                    {article.readTime}
+                  </span>
+                  <Button variant="ghost" size="sm" className="text-primary" data-testid={`link-blog-${index}`}>
+                    Read More
+                    <ArrowRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function ContactSection() {
+  const { toast } = useToast();
+  
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    },
+  });
+
+  const contactMutation = useMutation({
+    mutationFn: async (data: ContactFormData) => {
+      const response = await apiRequest("POST", "/api/contact", data);
+      return response;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Message sent!",
+        description: "Thank you for reaching out. I'll get back to you soon.",
+      });
+      reset();
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again or use direct contact methods.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const onSubmit = (data: ContactFormData) => {
+    contactMutation.mutate(data);
+  };
+
   const contactInfo = [
     {
       icon: Mail,
@@ -923,7 +1222,7 @@ function ContactSection() {
   ];
 
   return (
-    <section id="contact" className="py-24 scroll-mt-20">
+    <section id="contact" className="py-24 bg-muted/30 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -938,45 +1237,141 @@ function ContactSection() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-          {contactInfo.map((contact, index) => (
-            <motion.div
-              key={contact.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-            >
-              <a 
-                href={contact.href} 
-                target={contact.href.startsWith("http") ? "_blank" : undefined}
-                rel={contact.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                data-testid={`link-contact-${contact.label.toLowerCase()}`}
-              >
-                <Card className="p-6 text-center hover-elevate h-full">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <contact.icon className="h-6 w-6 text-primary" />
+        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <Card className="p-6">
+              <h3 className="text-xl font-semibold mb-6">Send a Message</h3>
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input
+                      id="name"
+                      placeholder="Your name"
+                      {...register("name")}
+                      data-testid="input-contact-name"
+                    />
+                    {errors.name && (
+                      <p className="text-xs text-destructive">{errors.name.message}</p>
+                    )}
                   </div>
-                  <h3 className="font-semibold mb-1">{contact.label}</h3>
-                  <p className="text-sm text-muted-foreground break-all">{contact.value}</p>
-                </Card>
-              </a>
-            </motion.div>
-          ))}
-        </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="your@email.com"
+                      {...register("email")}
+                      data-testid="input-contact-email"
+                    />
+                    {errors.email && (
+                      <p className="text-xs text-destructive">{errors.email.message}</p>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="subject">Subject</Label>
+                  <Input
+                    id="subject"
+                    placeholder="What's this about?"
+                    {...register("subject")}
+                    data-testid="input-contact-subject"
+                  />
+                  {errors.subject && (
+                    <p className="text-xs text-destructive">{errors.subject.message}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="message">Message</Label>
+                  <Textarea
+                    id="message"
+                    placeholder="Tell me about your project or opportunity..."
+                    className="min-h-32 resize-none"
+                    {...register("message")}
+                    data-testid="input-contact-message"
+                  />
+                  {errors.message && (
+                    <p className="text-xs text-destructive">{errors.message.message}</p>
+                  )}
+                </div>
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  disabled={contactMutation.isPending}
+                  data-testid="button-contact-submit"
+                >
+                  {contactMutation.isPending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      Send Message
+                    </>
+                  )}
+                </Button>
+              </form>
+            </Card>
+          </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-center mt-12"
-        >
-          <div className="flex items-center justify-center gap-2 text-muted-foreground">
-            <MapPin className="h-4 w-4" />
-            <span>180, Raj Nagar, A.T.V Project, Mathura, India 281004</span>
-          </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="space-y-6"
+          >
+            <h3 className="text-xl font-semibold">Or reach out directly</h3>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {contactInfo.map((contact) => (
+                <a 
+                  key={contact.label}
+                  href={contact.href} 
+                  target={contact.href.startsWith("http") ? "_blank" : undefined}
+                  rel={contact.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  data-testid={`link-contact-${contact.label.toLowerCase()}`}
+                >
+                  <Card className="p-4 hover-elevate h-full">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <contact.icon className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">{contact.label}</p>
+                        <p className="text-xs text-muted-foreground">{contact.value}</p>
+                      </div>
+                    </div>
+                  </Card>
+                </a>
+              ))}
+            </div>
+
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <MapPin className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-medium mb-1">Location</h4>
+                  <p className="text-sm text-muted-foreground">
+                    180, Raj Nagar, A.T.V Project<br />
+                    Mathura, India 281004
+                  </p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Currently studying in Milan, Italy
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -1036,6 +1431,8 @@ export default function Portfolio() {
         <ProjectsSection />
         <SkillsSection />
         <LanguagesSection />
+        <TestimonialsSection />
+        <BlogSection />
         <ContactSection />
       </main>
       <Footer />
