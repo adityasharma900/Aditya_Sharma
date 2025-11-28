@@ -222,10 +222,11 @@ function Navigation() {
 
 function HeroSection() {
   return (
-    <section className="min-h-[90vh] flex items-center relative overflow-hidden pt-20">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-      <div className="absolute top-20 right-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+    <section className="min-h-[90vh] flex items-center relative overflow-hidden pt-20 cyber-grid">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10" />
+      <div className="absolute top-20 right-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl floating-animation" />
+      <div className="absolute bottom-20 left-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl floating-animation" style={{ animationDelay: '-3s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-primary/5 to-transparent rounded-full" />
       
       <div className="max-w-7xl mx-auto px-6 py-16 w-full relative z-10">
         <div className="grid lg:grid-cols-5 gap-12 items-center">
@@ -235,14 +236,14 @@ function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Badge variant="secondary" className="mb-4">
+              <Badge variant="secondary" className="mb-4 backdrop-blur-sm border border-primary/20">
                 <span className="mr-2 inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 Currently: Master's Student at University of Milan
               </Badge>
             </motion.div>
             
             <motion.h1 
-              className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight"
+              className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight gradient-text"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
@@ -252,7 +253,7 @@ function HeroSection() {
             </motion.h1>
             
             <motion.p 
-              className="text-xl md:text-2xl text-muted-foreground max-w-2xl"
+              className="text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -269,13 +270,13 @@ function HeroSection() {
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               <a href="#projects" data-testid="link-view-work">
-                <Button size="lg">
+                <Button size="lg" className="shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 hover:-translate-y-0.5">
                   View My Work
                   <ChevronDown className="ml-2 h-4 w-4" />
                 </Button>
               </a>
               <a href="/api/download-cv" data-testid="link-download-cv-hero">
-                <Button variant="outline" size="lg">
+                <Button variant="outline" size="lg" className="backdrop-blur-sm border-primary/30 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300">
                   <Download className="mr-2 h-4 w-4" />
                   Download CV
                 </Button>
@@ -289,30 +290,33 @@ function HeroSection() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Card className="p-6 space-y-6">
-              <h3 className="text-lg font-semibold">Quick Stats</h3>
+            <Card className="p-6 space-y-6 futuristic-card backdrop-blur-sm">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary rounded-full pulse-glow"></span>
+                Quick Stats
+              </h3>
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <p className="text-3xl font-bold text-primary">2+</p>
+                <div className="space-y-1 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                  <p className="text-3xl font-bold gradient-text">2+</p>
                   <p className="text-sm text-muted-foreground">Years Experience</p>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-3xl font-bold text-primary">2</p>
+                <div className="space-y-1 p-3 rounded-lg bg-accent/5 border border-accent/10">
+                  <p className="text-3xl font-bold gradient-text">2</p>
                   <p className="text-sm text-muted-foreground">Major Projects</p>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-3xl font-bold text-primary">5+</p>
+                <div className="space-y-1 p-3 rounded-lg bg-accent/5 border border-accent/10">
+                  <p className="text-3xl font-bold gradient-text">5+</p>
                   <p className="text-sm text-muted-foreground">Tech Stacks</p>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-3xl font-bold text-primary">25%</p>
+                <div className="space-y-1 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                  <p className="text-3xl font-bold gradient-text">25%</p>
                   <p className="text-sm text-muted-foreground">Performance Boost</p>
                 </div>
               </div>
-              <div className="pt-4 border-t border-border">
+              <div className="pt-4 border-t border-border/50">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4" />
-                  <span>Mathura, India → Milan, Italy</span>
+                  <MapPin className="h-4 w-4 text-primary" />
+                  <span>Milano, Italy</span>
                 </div>
               </div>
             </Card>
@@ -325,8 +329,9 @@ function HeroSection() {
 
 function AboutSection() {
   return (
-    <section id="about" className="py-24 scroll-mt-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="about" className="py-24 scroll-mt-20 relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -334,7 +339,7 @@ function AboutSection() {
           transition={{ duration: 0.5 }}
           className="max-w-4xl mx-auto text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6" data-testid="text-about-title">About Me</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text" data-testid="text-about-title">About Me</h2>
           <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
             Aspiring computer scientist with expertise in AI and application development, 
             aiming to build innovative solutions that enhance safety and improve lives 
@@ -350,23 +355,19 @@ function AboutSection() {
             transition={{ duration: 0.5 }}
             className="space-y-6"
           >
-            <h3 className="text-2xl font-semibold">My Journey</h3>
+            <h3 className="text-2xl font-semibold flex items-center gap-3">
+              <span className="w-8 h-1 bg-gradient-to-r from-primary to-accent rounded-full"></span>
+              My Journey
+            </h3>
             <div className="space-y-4 text-muted-foreground">
               <p>
-                From completing my Bachelor's in Computer Application at Eklavya University 
-                with a focus on Java, .NET, and Computer Networks, to now pursuing my Master's 
-                in Computer Science at the prestigious University of Milan, my journey has been 
-                driven by a passion for creating impactful technology.
+                From earning my Bachelor's in Computer Applications at Eklavya University with a strong foundation in Java, .NET, and Computer Networks to advancing my expertise through a Master's in Computer Science at the University of Milan, my path has always centered around building meaningful, efficient technology.
               </p>
               <p>
-                During my 2+ years at UE Solution India, I honed my skills in cross-platform 
-                development using Flutter, integrated complex Python-based systems, and 
-                consistently delivered solutions that improved performance by up to 25%.
+                During my 2+ years at UE Solution India, I deepened my experience in cross-platform development with Flutter, integrated Python-driven systems into live products, and delivered optimizations that boosted overall performance by up to 25%. I'm especially driven by AI and machine learning, and have built predictive models achieving over 75% accuracy.
               </p>
               <p>
-                I'm particularly passionate about AI and machine learning, having developed 
-                predictive models that achieved 75% accuracy. My goal is to leverage these 
-                skills to build innovative solutions that make a real difference in people's lives.
+                I'm committed to using this blend of engineering, data-driven thinking, and real-world development experience to create innovative solutions that genuinely improve how people live and interact with technology.
               </p>
             </div>
           </motion.div>
@@ -377,12 +378,12 @@ function AboutSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <Card className="p-6 space-y-6">
+            <Card className="p-6 space-y-6 futuristic-card">
               <h3 className="text-xl font-semibold">Key Highlights</h3>
               <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <GraduationCap className="h-5 w-5 text-primary" />
+                <div className="flex gap-4 p-3 rounded-lg hover:bg-primary/5 transition-colors duration-300">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-primary/20">
+                    <GraduationCap className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h4 className="font-medium">Education</h4>
@@ -391,9 +392,9 @@ function AboutSection() {
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Code className="h-5 w-5 text-primary" />
+                <div className="flex gap-4 p-3 rounded-lg hover:bg-primary/5 transition-colors duration-300">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-primary/20">
+                    <Code className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h4 className="font-medium">Expertise</h4>
@@ -402,9 +403,9 @@ function AboutSection() {
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Target className="h-5 w-5 text-primary" />
+                <div className="flex gap-4 p-3 rounded-lg hover:bg-primary/5 transition-colors duration-300">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-primary/20">
+                    <Target className="h-6 w-6 text-primary" />
                   </div>
                   <div>
                     <h4 className="font-medium">Goal</h4>
@@ -449,7 +450,7 @@ function EducationSection() {
       degree: "Senior Secondary Schooling",
       institution: "Board of High School and Intermediate Education UP",
       location: "Mathura, India",
-      period: "Jul 2017 - Mar 2018",
+      period: "July 2019 - Mar 2020",
       current: false,
       field: "Physics, Chemistry, Mathematics",
       link: "https://upmsp.edu.in/",
@@ -457,8 +458,10 @@ function EducationSection() {
   ];
 
   return (
-    <section className="py-24 bg-muted/30">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24 bg-gradient-to-b from-muted/30 via-muted/50 to-muted/30 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -466,12 +469,12 @@ function EducationSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" data-testid="text-education-title">Education</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text" data-testid="text-education-title">Education</h2>
           <p className="text-lg text-muted-foreground">My academic journey and achievements</p>
         </motion.div>
 
         <div className="relative">
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-border md:-translate-x-0.5" />
+          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary via-accent to-primary md:-translate-x-0.5" />
           
           <div className="space-y-12">
             {education.map((edu, index) => (
@@ -485,17 +488,17 @@ function EducationSection() {
                   index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
               >
-                <div className="absolute left-4 md:left-1/2 w-4 h-4 rounded-full bg-primary border-4 border-background -translate-x-1/2 mt-6 z-10" />
+                <div className="absolute left-4 md:left-1/2 w-4 h-4 rounded-full bg-primary border-4 border-background -translate-x-1/2 mt-6 z-10 pulse-glow" />
                 
                 <div className={`flex-1 pl-12 md:pl-0 ${index % 2 === 0 ? "md:pr-12 md:text-right" : "md:pl-12"}`}>
-                  <Badge variant={edu.current ? "default" : "secondary"} className="mb-2">
+                  <Badge variant={edu.current ? "default" : "secondary"} className="mb-2 shadow-lg">
                     <Calendar className="h-3 w-3 mr-1" />
                     {edu.period}
                   </Badge>
                 </div>
                 
                 <div className={`flex-1 pl-12 md:pl-0 ${index % 2 === 0 ? "md:pl-12" : "md:pr-12"}`}>
-                  <Card className="p-6 space-y-4">
+                  <Card className="p-6 space-y-4 futuristic-card">
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold">{edu.degree}</h3>
                       <a 
@@ -551,8 +554,9 @@ function EducationSection() {
 
 function ExperienceSection() {
   return (
-    <section id="experience" className="py-24 scroll-mt-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="experience" className="py-24 scroll-mt-20 relative cyber-grid">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -560,7 +564,7 @@ function ExperienceSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" data-testid="text-experience-title">Work Experience</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text" data-testid="text-experience-title">Work Experience</h2>
           <p className="text-lg text-muted-foreground">Building impactful solutions at scale</p>
         </motion.div>
 
@@ -570,7 +574,7 @@ function ExperienceSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <Card className="p-8 space-y-6">
+          <Card className="p-8 space-y-6 futuristic-card">
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
               <div className="space-y-2">
                 <h3 className="text-2xl font-bold">Application Developer</h3>
@@ -719,8 +723,10 @@ function ProjectsSection() {
   ];
 
   return (
-    <section id="projects" className="py-24 bg-muted/30 scroll-mt-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="projects" className="py-24 bg-gradient-to-b from-muted/30 via-muted/50 to-muted/30 scroll-mt-20 relative overflow-hidden">
+      <div className="absolute top-1/4 left-0 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-0 w-72 h-72 bg-accent/10 rounded-full blur-3xl" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -728,7 +734,7 @@ function ProjectsSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" data-testid="text-projects-title">Projects</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text" data-testid="text-projects-title">Projects</h2>
           <p className="text-lg text-muted-foreground">Showcasing my technical expertise and problem-solving abilities</p>
         </motion.div>
 
@@ -741,7 +747,7 @@ function ProjectsSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="p-6 h-full flex flex-col">
+              <Card className="p-6 h-full flex flex-col futuristic-card group">
                 <div className="flex-1 space-y-4">
                   <div className="flex items-start justify-between gap-4">
                     <div>
@@ -751,8 +757,8 @@ function ProjectsSection() {
                         {project.period}
                       </Badge>
                     </div>
-                    <div className="text-right">
-                      <p className="text-3xl font-bold text-primary">{project.metric}</p>
+                    <div className="text-right p-3 rounded-lg bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20">
+                      <p className="text-3xl font-bold gradient-text">{project.metric}</p>
                       <p className="text-xs text-muted-foreground">{project.metricLabel}</p>
                     </div>
                   </div>
@@ -880,8 +886,9 @@ function SkillsSection() {
   ];
 
   return (
-    <section id="skills" className="py-24 scroll-mt-20">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="skills" className="py-24 scroll-mt-20 relative cyber-grid">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-accent/5 to-transparent" />
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -889,7 +896,7 @@ function SkillsSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" data-testid="text-skills-title">Skills</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 gradient-text" data-testid="text-skills-title">Skills</h2>
           <p className="text-lg text-muted-foreground">Technologies and tools I work with</p>
         </motion.div>
 
@@ -902,10 +909,10 @@ function SkillsSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="p-6 h-full">
+              <Card className="p-6 h-full futuristic-card">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <category.icon className="h-5 w-5 text-primary" />
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-primary/20">
+                    <category.icon className="h-6 w-6 text-primary" />
                   </div>
                   <h3 className="text-lg font-semibold">{category.title}</h3>
                 </div>
@@ -913,12 +920,12 @@ function SkillsSection() {
                   {category.skills.map((skill) => (
                     <div key={skill.name} className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>{skill.name}</span>
-                        <span className="text-muted-foreground">{skill.level}%</span>
+                        <span className="font-medium">{skill.name}</span>
+                        <span className="text-primary font-semibold">{skill.level}%</span>
                       </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                      <div className="h-2.5 bg-muted/50 rounded-full overflow-hidden border border-primary/10">
                         <motion.div
-                          className="h-full bg-primary rounded-full"
+                          className="h-full bg-gradient-to-r from-primary to-accent rounded-full"
                           initial={{ width: 0 }}
                           whileInView={{ width: `${skill.level}%` }}
                           viewport={{ once: true }}
@@ -954,7 +961,7 @@ function LanguagesSection() {
           <p className="text-lg text-muted-foreground">Communication is key to collaboration</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -995,6 +1002,58 @@ function LanguagesSection() {
                 {proficiencyLevels.map((level) => (
                   <Badge key={level} variant="outline" className="text-xs">
                     {level}: B2
+                  </Badge>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Card className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Languages className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">German</h3>
+                  <p className="text-sm text-muted-foreground">Intermediate Proficiency</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {proficiencyLevels.map((level) => (
+                  <Badge key={level} variant="outline" className="text-xs">
+                    {level}: B1
+                  </Badge>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Card className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Languages className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">Italian</h3>
+                  <p className="text-sm text-muted-foreground">Beginner Proficiency</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {proficiencyLevels.map((level) => (
+                  <Badge key={level} variant="outline" className="text-xs">
+                    {level}: A1
                   </Badge>
                 ))}
               </div>
@@ -1204,14 +1263,14 @@ function ContactSection() {
     {
       icon: Phone,
       label: "Phone",
-      value: "+91 9389096049",
-      href: "tel:+919389096049",
+      value: "+39 3930909797",
+      href: "tel:+393930909797",
     },
     {
       icon: SiWhatsapp,
       label: "WhatsApp",
-      value: "9389096049",
-      href: "https://wa.me/919389096049",
+      value: "3930909797",
+      href: "https://wa.me/393930909797",
     },
     {
       icon: SiLinkedin,
@@ -1361,11 +1420,8 @@ function ContactSection() {
                 <div>
                   <h4 className="font-medium mb-1">Location</h4>
                   <p className="text-sm text-muted-foreground">
-                    180, Raj Nagar, A.T.V Project<br />
-                    Mathura, India 281004
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Currently studying in Milan, Italy
+                    Via monsignor luigi martini 8<br />
+                    Milano, Italy
                   </p>
                 </div>
               </div>
@@ -1403,7 +1459,7 @@ function Footer() {
                 <Mail className="h-5 w-5" />
               </Button>
             </a>
-            <a href="https://wa.me/919389096049" target="_blank" rel="noopener noreferrer" data-testid="link-footer-whatsapp">
+            <a href="https://wa.me/393930909797" target="_blank" rel="noopener noreferrer" data-testid="link-footer-whatsapp">
               <Button size="icon" variant="ghost">
                 <MessageCircle className="h-5 w-5" />
               </Button>

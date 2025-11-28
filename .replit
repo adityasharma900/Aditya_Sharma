@@ -18,11 +18,6 @@ externalPort = 80
 localPort = 44291
 externalPort = 3001
 
-<<<<<<< HEAD
-
-
-
->>>>>>> 9258f2f (Extracted stack files)
 [env]
 PORT = "5000"
 
